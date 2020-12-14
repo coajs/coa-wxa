@@ -317,15 +317,15 @@ export default new class {
   }
 
   async saveFile (args: WechatMiniprogram.WxSaveFileOption) {
-    return await async_void(w.saveFile, args)
+    return await async(w.saveFile, args)
   }
 
   async getSavedFileInfo (args: WechatMiniprogram.GetSavedFileInfoOption) {
-    return await async_void(w.getSavedFileInfo, args)
+    return await async(w.getSavedFileInfo, args)
   }
 
   async getFileInfo (args: WechatMiniprogram.WxGetFileInfoOption) {
-    return await async_void(w.getFileInfo, args)
+    return await async(w.getFileInfo, args)
   }
 
   self () {
