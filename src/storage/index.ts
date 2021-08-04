@@ -4,22 +4,17 @@ import { Dic } from '../typing'
 // 内存
 let $MEMORY = {} as Dic<string>
 
-const snakeCase = (str: string) => (str.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g) || [])
-  .map(x => x.toLowerCase())
-  .join('_')
+const snakeCase = (str: string) => (str.match(/[A-Z]{2,}(?=[A-Z][a-z]+[0-9]*|\b)|[A-Z]?[a-z]+[0-9]*|[A-Z]|[0-9]+/g) || []).map((x) => x.toLowerCase()).join('_')
 
 const id2key = (id: string) => config.env + '_' + snakeCase(id)
 
-export default new class {
-
-  local = new class {
-
-    set (id: string, value: any, ms = 30 * 24 * 3600 * 1000) {
+export default new (class {
+  local = new (class {
+    set(id: string, value: any, ms = 30 * 24 * 3600 * 1000) {
       wx.setStorageSync(id2key(id), [Date.now() + ms, value])
     }
 
-    get<T = any> (id: string) {
-
+    get<T = any>(id: string) {
       const result = wx.getStorageSync(id2key(id)) || [0, undefined]
 
       const expire = result[0] || 0
@@ -33,16 +28,15 @@ export default new class {
       return result[1] as T
     }
 
-    remove (id: string) {
+    remove(id: string) {
       return wx.removeStorageSync(id2key(id))
     }
 
-    clear () {
+    clear() {
       wx.clearStorageSync()
     }
 
-    async warp<T> (id: string, worker: () => Promise<T>, ms?: number) {
-
+    async warp<T>(id: string, worker: () => Promise<T>, ms?: number) {
       let result = this.get(id)
 
       if (result === undefined) {
@@ -50,20 +44,17 @@ export default new class {
         this.set(id, result, ms)
       }
       return result
-
     }
+  })()
 
-  }
-
-  memory = new class {
-
-    set (id: string, value: any, ms = 24 * 3600 * 1000) {
+  memory = new (class {
+    set(id: string, value: any, ms = 24 * 3600 * 1000) {
       const expire = Date.now() + ms
       $MEMORY[id2key(id)] = JSON.stringify([expire, value])
       return value
     }
 
-    get<T = any> (id: string) {
+    get<T = any>(id: string) {
       try {
         const data = JSON.parse($MEMORY[id2key(id)] || '[0]')
         const expire = parseInt(data[0]) || 0
@@ -77,20 +68,19 @@ export default new class {
       }
     }
 
-    remove (id: string) {
+    remove(id: string) {
       delete $MEMORY[id2key(id)]
     }
 
-    clear () {
+    clear() {
       $MEMORY = {}
     }
 
-    show () {
+    show() {
       console.log('$SESSION', $MEMORY)
     }
 
-    async warp<T> (id: string, worker: () => Promise<T>, ms?: number) {
-
+    async warp<T>(id: string, worker: () => Promise<T>, ms?: number) {
       let result = this.get(id)
 
       if (result === undefined) {
@@ -98,8 +88,6 @@ export default new class {
         this.set(id, result, ms)
       }
       return result
-
     }
-  }
-
-}
+  })()
+})()
