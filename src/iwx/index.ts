@@ -334,16 +334,28 @@ export default new (class {
     return await async(w.saveImageToPhotosAlbum, args)
   }
 
-  async saveFile(args: WechatMiniprogram.WxSaveFileOption) {
-    return await async(w.saveFile, args)
+  async saveFileToDisk(args: WechatMiniprogram.SaveFileToDiskOption) {
+    return await async(w.saveFileToDisk, args)
   }
 
-  async getSavedFileInfo(args: WechatMiniprogram.GetSavedFileInfoOption) {
-    return await async(w.getSavedFileInfo, args)
+  FileSystemManager() {
+    return w.getFileSystemManager()
   }
 
-  async getFileInfo(args: WechatMiniprogram.WxGetFileInfoOption) {
-    return await async(w.getFileInfo, args)
+  async getFileInfo(args: WechatMiniprogram.GetFileInfoOption) {
+    return await async(this.FileSystemManager().getFileInfo, args)
+  }
+
+  async getPrivacySetting() {
+    return await async(w.getPrivacySetting)
+  }
+
+  async openPrivacyContract() {
+    return await async(w.openPrivacyContract)
+  }
+
+  async requirePrivacyAuthorize() {
+    return await async(w.requirePrivacyAuthorize)
   }
 
   self() {
